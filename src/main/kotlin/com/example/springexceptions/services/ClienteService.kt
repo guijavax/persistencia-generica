@@ -1,7 +1,7 @@
 package com.example.springexceptions.services
 
+import com.example.springexceptions.generic.RepositoryGeneric
 import com.example.springexceptions.model.Cliente
-import com.example.springexceptions.repository.ClienteRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -9,17 +9,21 @@ import org.springframework.stereotype.Service
 class ClienteService {
 
     @Autowired
-    lateinit var repository : ClienteRepository
+    lateinit var repository : RepositoryGeneric<Cliente>
 
-    fun findClienteById(id: Long) = repository.findById(id)
+    private val classe = Cliente::class.java
 
+//
+    fun findClienteById(id: Long) = repository.findById(classe, id)
+    //
     fun findAllClientes() = repository.findAll()
-
-    fun changeCliente(cliente: Cliente) = repository.saveAndFlush(cliente)
-
-    fun deleCliente(id: Long) { repository.deleteById(id) }
-
-    fun insere(cliente: Cliente) : Cliente{
-       return repository.save(cliente)
+//
+    fun changeCliente(cliente: Cliente){
+        repository.saveAndFlush(cliente)
+    }
+//
+    fun deleteCliente(id: Long) { repository.deleteById(id) }
+    fun insere(cliente: Cliente) {
+        repository.save(cliente)
     }
 }

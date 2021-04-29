@@ -23,28 +23,34 @@ class ClienteController {
     @RequestMapping(value = ["/{id}"],method = [RequestMethod.GET])
     fun getClienteById(@PathVariable("id") idCliente : Long) : ResponseEntity<Any>{
         val cliente = service.findClienteById(idCliente)
-        return if(!cliente.isEmpty) ResponseEntity.ok(cliente) else ResponseEntity.noContent().build()
+        return if(cliente  != null) ResponseEntity.ok(cliente) else ResponseEntity.noContent().build()
     }
 
     @RequestMapping(method = [RequestMethod.POST])
     fun insertCliente(@RequestBody cliente : Cliente) : ResponseEntity<Cliente> {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.insere(cliente))
+        service.insere(cliente)
+        return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
     @RequestMapping(method = [RequestMethod.GET])
     fun getClientes() : ResponseEntity<Any>{
         val clientes = service.findAllClientes()
-        return if(!clientes.isEmpty()) ResponseEntity.ok(clientes) else ResponseEntity.noContent().build()
+        return if(clientes?.let { it.isNotEmpty()} == true){
+            ResponseEntity.ok(clientes)
+        } else {
+            ResponseEntity.noContent().build()
+        }
     }
 
     @RequestMapping(method = [RequestMethod.PATCH])
     fun updateCliente(@RequestBody cliente : Cliente) : ResponseEntity<Cliente> {
-        return ResponseEntity.status(HttpStatus.OK).body(service.insere(cliente))
+        service.changeCliente(cliente)
+        return ResponseEntity.status(HttpStatus.OK).build()
     }
-
+//
     @RequestMapping(value = ["/{id}"],method = [RequestMethod.DELETE])
     fun deleteClienteById(@PathVariable("id") idCliente : Long) : ResponseEntity<Any>{
-        val cliente = service.deleCliente(idCliente)
+        service.deleteCliente(idCliente)
         return ResponseEntity.noContent().build()
     }
 }
